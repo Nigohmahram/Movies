@@ -218,4 +218,60 @@ window.addEventListener('DOMContentLoaded', () => {
           20,
           '.menu .container'
      ).render();
+
+
+     //#56. Ma'lumot yuborish
+     //Form
+
+     const forms = document.querySelectorAll('form');
+
+     forms.forEach((form) => {
+          postData(form);
+     });
+     // console.log(forms);
+
+     const msg = {
+          loading: 'Loading....',
+          success: "Thank's for submitting our form",
+          failure: 'Something went wrong',
+     };
+     function postData(form) {
+          form.addEventListener('submit', (e) => {
+               e.preventDefault();
+
+               const statusMessage = document.createElement('div');
+               statusMessage.textContent = msg.loading;
+               form.append(statusMessage);
+
+               const request = new XMLHttpRequest();
+               request.open('POST', 'server.php');
+
+               request.setRequestHeader('Content-Type', 'application/json');
+
+               const obj = {};
+
+               const formData = new FormData(form);
+
+               formData.forEach((val, key) => {
+                    obj[key] = val;
+               });
+
+               const json = JSON.stringify(obj);
+
+               request.send(json);
+
+               request.addEventListener('load', () => {
+                    if (request.status == 200) {
+                         console.log(request.response);
+                         statusMessage.textContent = msg.success;
+                         form.reset();
+                         setTimeout(() => {
+                              statusMessage.remove();
+                         }, 2000);
+                    } else {
+                         statusMessage.textContent = msg.failure;
+                    }
+               });
+          });
+     }
 });
