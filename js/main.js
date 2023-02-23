@@ -111,8 +111,8 @@ window.addEventListener('DOMContentLoaded', () => {
      ///Modal oyna
      // Modal
      const modalTrigger = document.querySelectorAll('[data-modal]'),
-          modal = document.querySelector('.modal'),
-          modalCloseBtn = document.querySelector('[data-close]');
+          modal = document.querySelector('.modal');
+          // modalCloseBtn = document.querySelector('[data-close]');//kerak emas olib tashlandi 57dars sabab
 
      function closeModal() {
           modal.classList.add('hide');
@@ -131,10 +131,10 @@ window.addEventListener('DOMContentLoaded', () => {
           item.addEventListener('click', openModal);
      });
 
-     modalCloseBtn.addEventListener('click', closeModal);
+     // modalCloseBtn.addEventListener('click', closeModal);//kerak emas olib tashlandi 57dars sabab
 
      modal.addEventListener('click', (e) => {
-          if (e.target == modal) {
+          if (e.target == modal || e.target.getAttribute('data-close') == '') {//olib tashlangandan keyin qushildi 57dars sababli || e.target.getAttribute('data-close') == ''
                closeModal();
           }
      });
@@ -231,17 +231,20 @@ window.addEventListener('DOMContentLoaded', () => {
      // console.log(forms);
 
      const msg = {
-          loading: 'Loading....',
-          success: "Thank's for submitting our form",
-          failure: 'Something went wrong',
+          loading: 'icons/loading.svg',
+          success: 'Thanks for submitting our form',
+          failure: 'Something went wrong'
      };
      function postData(form) {
           form.addEventListener('submit', (e) => {
                e.preventDefault();
 
-               const statusMessage = document.createElement('div');
-               statusMessage.textContent = msg.loading;
-               form.append(statusMessage);
+               const statusMessage = document.createElement('img');
+               statusMessage.src = msg.loading;
+               statusMessage.style.cssText = `
+               display: block;
+               margin: 0 auto`;
+               form.insertAdjacentElement('afterend', statusMessage);
 
                const request = new XMLHttpRequest();
                request.open('POST', 'server.php');
@@ -263,15 +266,43 @@ window.addEventListener('DOMContentLoaded', () => {
                request.addEventListener('load', () => {
                     if (request.status == 200) {
                          console.log(request.response);
-                         statusMessage.textContent = msg.success;
+                         showThanksModal(msg.success);
                          form.reset();
                          setTimeout(() => {
                               statusMessage.remove();
                          }, 2000);
                     } else {
-                         statusMessage.textContent = msg.failure;
+                         showThanksModal(msg.failure);
                     }
                });
           });
+     }
+
+
+     //#57. Dynamic styling
+     //Dynamic styling
+
+     function showThanksModal(message) {
+          const prevModalDialog = document.querySelector('.modal__dialog');
+
+          prevModalDialog.classList.add('hide');
+          openModal();
+
+          const thanksModal = document.createElement('div');
+          thanksModal.classList.add('modal__dialog');
+          thanksModal.innerHTML = `
+          <div class="modal__content"
+          <div data-close class="modal__close">&times;</div>
+          <div class="modal__title">${message}</div>
+          </div>`;
+
+          document.querySelector('.modal').append(thanksModal);
+
+          setTimeout(() => {
+               thanksModal.remove();
+               prevModalDialog.classList.add('show');
+               prevModalDialog.classList.remove('hide');
+               closeModal();
+          }, 4000);
      }
 });
