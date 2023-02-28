@@ -2,5 +2,24 @@
   "dependencies": {
     "bootstrap": "^5.2.3",
     "jquery": "^3.6.3"
-  }
+  },
+  "name": "movies",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nigohmahram/Movies.git"
+  },
+  "keywords": ["js", "html","css","bootstrap", "jquery"],
+  "author": "Usmonov Khojiakbar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nigohmahram/Movies/issues"
+  },
+  "homepage": "https://github.com/Nigohmahram/Movies#readme",
+  "description": "Frontend Developer"
 }
